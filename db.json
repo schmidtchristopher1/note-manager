@@ -1,0 +1,6 @@
+{
+  "notes": [
+    { "id": 1, "title": "Prvá poznámka", "content": "Obsah prvej poznámky" },
+    { "id": 2, "title": "Druhá poznámka", "content": "Obsah druhej poznámky" }
+  ]
+}
