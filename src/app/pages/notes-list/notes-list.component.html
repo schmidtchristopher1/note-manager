@@ -1,12 +1,13 @@
 <h1>Zoznam poznámok</h1>
 
 <div class="zoznam">
-<div *ngFor="let note of notes" class="card text-bg-dark mb-3" style="max-width: 18rem;">
-    <div class="card-header">Header</div>
+  <div *ngFor="let note of notes" class="card text-bg-dark mb-3" style="max-width: 18rem;">
+    <div class="card-header">
+      <b>{{note.title}}</b>
+    </div>
     <div class="card-body">
-      <h5 class="card-title">{{note.title}}</h5>
       <p class="card-text">{{note.content}}</p>
     </div>
   </div>
-  
+
 </div>

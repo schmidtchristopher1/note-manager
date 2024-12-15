@@ -1,12 +1,16 @@
-h1{
-    text-align: center;
-    margin-top: 20px;
-    color: #007bff;
+h1 {
+  text-align: center;
+  margin-top: 20px;
+  color: rgb(231, 103, 243);
 }
 
-.zoznam{
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
-    margin-top: 20px;
+.zoznam {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  margin-top: 20px;
+}
+
+b {
+  color: rgb(231, 103, 243);
 }
