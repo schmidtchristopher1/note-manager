@@ -9,15 +9,6 @@ import { NotesService, Note } from '../../services/notes.service';
   templateUrl: './notes-list.component.html',
   styleUrls: ['./notes-list.component.css'],
 })
-export class NotesListComponent implements OnInit {
-  notes: Note[] = [];
+export class NotesListComponent  {
 
-  constructor(@Inject(NotesService) private notesService: NotesService) { }
-
-  ngOnInit(): void {
-    this.notesService.getNotes().subscribe({
-      next: (data: Note[]) => (this.notes = data),
-      error: (err: any) => console.error('Chyba pri načítaní poznámok:', err),
-    });
-  }
 }
