@@ -6,7 +6,7 @@ import { NotesService } from '../../services/notes.service';
 @Component({
   selector: 'app-add-note',
   templateUrl: './add-note.component.html',
-  styleUrls: ['./add-note.component.scss'],
+  styleUrls: ['./add-note.component.css'],
 })
 export class AddNoteComponent {
   noteForm: FormGroup;
