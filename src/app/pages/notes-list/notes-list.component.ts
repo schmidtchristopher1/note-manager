@@ -16,7 +16,7 @@ export class NotesListComponent implements OnInit {
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    this.http.get<any[]>('http://localhost:3000/notes').subscribe(data => {
+    this.http.get<any[]>('http://localhost:5000/notes').subscribe(data => {
       this.notes = data;
     });
   }

@@ -8,12 +8,12 @@ export class AuthService {
   constructor() { }
 
   setToken(token: string) {
-    localStorage.setItem('authToken', token);
+    localStorage.setItem('access_token', token);
   }
   getToken(): string | null {
-    return localStorage.getItem('authToken');
+    return localStorage.getItem('access_token');
   }
   removeToken() {
-    localStorage.removeItem('authToken');
+    localStorage.removeItem('access_token');
   }
 }

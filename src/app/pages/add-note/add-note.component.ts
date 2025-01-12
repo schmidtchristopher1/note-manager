@@ -18,7 +18,7 @@ export class AddNoteComponent {
   constructor(private http: HttpClient) {}
 
   addNote(): void {
-    this.http.post('http://localhost:3000/notes', this.note).subscribe(response => {
+    this.http.post('http://localhost:5000/add-note', this.note).subscribe(response => {
       console.log('Note added', response);
      
       this.note = { title: '', content: '' };
