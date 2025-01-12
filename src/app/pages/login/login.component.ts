@@ -17,7 +17,7 @@ export class LoginComponent {
 
   constructor(private http: HttpClient, private authService: AuthService) {
     this.loginForm = new FormGroup({
-      email: new FormControl('', Validators.required),
+      username: new FormControl('', Validators.required),
       password: new FormControl('', Validators.required)
     });
   }
@@ -25,17 +25,19 @@ export class LoginComponent {
 
   onSubmit() {
     if (this.loginForm.valid) {
-      const { email, password } = this.loginForm.value;
-      this.http.post<{ token: string }>('https://your-backend-url.com/api/login', { email, password })
-      .subscribe({
-        next: (response) => {
-          this.authService.setToken(response.token);
-          console.log('Login successful');
-        },
-        error: (error) => {
-          console.error('Login failed', error);
-        }
-      });
+      const { username, password } = this.loginForm.value;
+      const logindata= {username, password};
+      console.log(logindata);
+      // this.http.post<{ token: string }>('http://localhost:', { username, password })
+      // .subscribe({
+      //   next: (response) => {
+      //     this.authService.setToken(response.token);
+      //     console.log('Login successful');
+      //   },
+      //   error: (error) => {
+      //     console.error('Login failed', error);
+      //   }
+      // });
   } else {
     console.log('Form is invalid');
   }
