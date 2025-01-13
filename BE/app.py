@@ -9,34 +9,38 @@ from flask_cors import CORS  # Add this import
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['JWT_SECRET_KEY'] = 'your_jwt_secret_key'
-app.config['CORS_HEADERS'] = 'Content-Type'  # Add CORS headers configuration
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///users.db"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["JWT_SECRET_KEY"] = "your_jwt_secret_key"
+app.config["CORS_HEADERS"] = "Content-Type"  # Add CORS headers configuration
 
 db = SQLAlchemy(app)
 jwt = JWTManager(app)
+
 
 # Define User model
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
-    
+
+
 class Note(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(80), nullable=False)
     content = db.Column(db.String(200), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+
 
 # Login endpoint
-@app.route('/login', methods=['POST'])
+@app.route("/login", methods=["POST"])
 def login():
     data = request.get_json()
-    if not data or not data.get('username') or not data.get('password'):
+    if not data or not data.get("username") or not data.get("password"):
         return jsonify({"message": "Missing username or password"}), 400
 
-    username = data['username']
-    password = data['password']
+    username = data["username"]
+    password = data["password"]
 
     # Fetch user from the database
     user = User.query.filter_by(username=username).first()
@@ -47,20 +51,24 @@ def login():
     access_token = create_access_token(identity=user.id)
     return jsonify({"access_token": access_token}), 200
 
-@app.route('/notes', methods=['GET'])
+
+@app.route("/notes", methods=["GET"])
 def get_notes():
     notes = Note.query.all()
-    notes = [{"id":note.id,'title': note.title, 'content': note.content} for note in notes]
+    notes = [
+        {"id": note.id, "title": note.title, "content": note.content} for note in notes
+    ]
     return jsonify(notes), 200
 
-@app.route('/add-note', methods=['POST'])
+
+@app.route("/add-note", methods=["POST"])
 def add_note():
     data = request.get_json()
-    if not data or not data.get('title') or not data.get('content'):
+    if not data or not data.get("title") or not data.get("content"):
         return jsonify({"message": "Missing title or content"}), 400
 
-    title = data['title']
-    content = data['content']
+    title = data["title"]
+    content = data["content"]
 
     note = Note(title=title, content=content)
     db.session.add(note)
@@ -68,14 +76,15 @@ def add_note():
 
     return jsonify({"message": "Note added successfully"}), 200
 
-@app.route('/update-note/<int:id>', methods=['PUT'])
+
+@app.route("/update-note/<int:id>", methods=["PUT"])
 def update_note(id):
     data = request.get_json()
-    if not data or not data.get('title') or not data.get('content'):
+    if not data or not data.get("title") or not data.get("content"):
         return jsonify({"message": "Missing title or content"}), 400
 
-    title = data['title']
-    content = data['content']
+    title = data["title"]
+    content = data["content"]
 
     note = Note.query.get(id)
     if not note:
@@ -87,7 +96,8 @@ def update_note(id):
 
     return jsonify({"message": "Note updated successfully"}), 200
 
-@app.route('/delete-note/<int:id>', methods=['DELETE'])
+
+@app.route("/delete-note/<int:id>", methods=["DELETE"])
 def delete_note(id):
     note = Note.query.get(id)
     if not note:
@@ -98,23 +108,24 @@ def delete_note(id):
 
     return jsonify({"message": "Note deleted successfully"}), 200
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     with app.app_context():
         # Create database tables
         db.create_all()
-        
+
         # Check if admin user exists
-        if not User.query.filter_by(username='admin').first():
-            admin = User(username='admin', password=generate_password_hash('admin'))
+        if not User.query.filter_by(username="admin").first():
+            admin = User(username="admin", password=generate_password_hash("admin"))
             db.session.add(admin)
-            
+
             # Add sample notes
-            note1 = Note(title='Welcome', content='Welcome to the notes app!')
-            note2 = Note(title='First Note', content='This is your first note.')
+            note1 = Note(title="Welcome", content="Welcome to the notes app!")
+            note2 = Note(title="First Note", content="This is your first note.")
             db.session.add(note1)
             db.session.add(note2)
-            
+
             db.session.commit()
-    
+
     # Start the Flask application
     app.run(debug=True)
