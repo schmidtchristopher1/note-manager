@@ -1,7 +1,7 @@
 h1 {
   text-align: center;
   margin-top: 20px;
-  color: rgb(231, 103, 243);
+  color: black;
 }
 
 .zoznam {
@@ -11,6 +11,7 @@ h1 {
   margin-top: 20px;
 }
 
-b {
-  color: rgb(231, 103, 243);
+.card-header b {
+  color: white;
+  text-transform: uppercase;
 }
