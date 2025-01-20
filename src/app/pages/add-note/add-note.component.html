@@ -7,11 +7,13 @@
       <div class="card-body">
         <form (ngSubmit)="addNote()">
           <div class="form-floating">
-            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea" [(ngModel)]="note.title" name="title" required></textarea>
-            <label for="floatingTextarea">Name of Note:</label>
+            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea"
+              [(ngModel)]="note.title" name="title" required></textarea>
+            <label for="floatingTextarea">Title of Note:</label>
           </div>
           <div class="form-floating">
-            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px" [(ngModel)]="note.content" name="content" required></textarea>
+            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2"
+              style="height: 100px" [(ngModel)]="note.content" name="content" required></textarea>
             <label for="floatingTextarea2">Note content:</label>
           </div>
           <button type="submit" class="btn btn-primary">Add note</button>
