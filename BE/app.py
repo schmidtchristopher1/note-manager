@@ -66,12 +66,18 @@ def get_notes():
 
 @app.route("/add-note", methods=["POST"])
 def add_note():
+    if not request.is_json:
+        return jsonify({"message": "Content type must be application/json"}), 415
+
     data = request.get_json()
-    if not data or not data.get("title") or not data.get("content"):
+    if not data:
         return jsonify({"message": "Missing title or content"}), 400
 
-    title = data["title"]
-    content = data["content"]
+    title = data.get("title")
+    content = data.get("content")
+
+    if not title or not content:
+        return jsonify({"message": "Missing title or content"}), 400
 
     note = Note(title=title, content=content)
     db.session.add(note)
@@ -104,7 +110,7 @@ def update_note(id):
 def delete_note(id):
     note = Note.query.get(id)
     if not note:
-        return jsonify({"message": "Note not found"}), 404
+        return jsonify({"message": "This Note doesn't exist."}), 404
 
     db.session.delete(note)
     db.session.commit()
