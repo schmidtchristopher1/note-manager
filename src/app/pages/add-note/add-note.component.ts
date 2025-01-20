@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpClientModule, HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -15,12 +15,15 @@ export class AddNoteComponent {
     content: ''
   };
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   addNote(): void {
-    this.http.post('http://localhost:5000/add-note', this.note).subscribe(response => {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    this.http.post('http://localhost:5000/add-note', this.note, { headers }).subscribe(response => {
       console.log('Note added', response);
-     
       this.note = { title: '', content: '' };
     });
   }
