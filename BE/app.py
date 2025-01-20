@@ -1,3 +1,4 @@
+import os
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager, create_access_token
@@ -29,7 +30,6 @@ class Note(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(80), nullable=False)
     content = db.Column(db.String(200), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
 
 
 # Login endpoint
@@ -58,7 +58,10 @@ def get_notes():
     notes = [
         {"id": note.id, "title": note.title, "content": note.content} for note in notes
     ]
-    return jsonify(notes), 200
+    if not notes:
+        return jsonify({"message": "No notes found"}), 404
+    else:
+        return jsonify(notes), 200
 
 
 @app.route("/add-note", methods=["POST"])
@@ -110,22 +113,27 @@ def delete_note(id):
 
 
 if __name__ == "__main__":
-    with app.app_context():
-        # Create database tables
-        db.create_all()
+    db_path = "instance/users.db"
 
-        # Check if admin user exists
-        if not User.query.filter_by(username="admin").first():
+    with app.app_context():
+        # Create database tables and insert initial data only if DB doesn't exist
+        if not os.path.exists(db_path):
+            db.create_all()
+
+            # Create admin user
             admin = User(username="admin", password=generate_password_hash("admin"))
             db.session.add(admin)
+            db.session.commit()  # Commit to ensure admin user gets an ID
 
-            # Add sample notes
+            # Add sample notes linked to admin user
             note1 = Note(title="Welcome", content="Welcome to the notes app!")
             note2 = Note(title="First Note", content="This is your first note.")
             db.session.add(note1)
             db.session.add(note2)
-
             db.session.commit()
+            print("Database created and initialized with sample data.")
+        else:
+            print("Database already exists. Skipping initialization.")
 
     # Start the Flask application
     app.run(debug=True)
