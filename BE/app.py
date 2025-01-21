@@ -1,3 +1,4 @@
+import datetime
 import os
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
@@ -30,6 +31,7 @@ class Note(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(80), nullable=False)
     content = db.Column(db.String(200), nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False, server_default=db.func.now())
 
 
 # Login endpoint
@@ -56,7 +58,13 @@ def login():
 def get_notes():
     notes = Note.query.all()
     notes = [
-        {"id": note.id, "title": note.title, "content": note.content} for note in notes
+        {
+            "id": note.id,
+            "title": note.title,
+            "content": note.content,
+            "created_at": note.created_at.strftime("%Y-%m-%d %H:%M"),
+        }
+        for note in notes
     ]
     if not notes:
         return jsonify({"message": "No notes found"}), 404
@@ -66,12 +74,11 @@ def get_notes():
 
 @app.route("/add-note", methods=["POST"])
 def add_note():
-    if not request.is_json:
-        return jsonify({"message": "Content type must be application/json"}), 415
+    time_of_creation = datetime.datetime.now()
 
-    data = request.get_json()
-    if not data:
-        return jsonify({"message": "Missing title or content"}), 400
+    data = request.get_json(silent=True)
+    if not data or not isinstance(data, dict):
+        return jsonify({"message": "Invalid JSON payload"}), 400
 
     title = data.get("title")
     content = data.get("content")
@@ -79,11 +86,16 @@ def add_note():
     if not title or not content:
         return jsonify({"message": "Missing title or content"}), 400
 
-    note = Note(title=title, content=content)
-    db.session.add(note)
-    db.session.commit()
+    # Pass the `datetime` object directly
+    note = Note(title=title, content=content, created_at=time_of_creation)
+    try:
+        db.session.add(note)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"message": "Database error", "error": str(e)}), 500
 
-    return jsonify({"message": "Note added successfully"}), 200
+    return jsonify({"message": "Note added successfully"}), 201
 
 
 @app.route("/update-note/<int:id>", methods=["PUT"])
@@ -132,8 +144,16 @@ if __name__ == "__main__":
             db.session.commit()  # Commit to ensure admin user gets an ID
 
             # Add sample notes linked to admin user
-            note1 = Note(title="Welcome", content="Welcome to the notes app!")
-            note2 = Note(title="First Note", content="This is your first note.")
+            note1 = Note(
+                title="Welcome",
+                content="Welcome to the notes app!",
+                created_at=datetime.datetime.now(),
+            )
+            note2 = Note(
+                title="First Note",
+                content="This is your first note.",
+                created_at=datetime.datetime.now(),
+            )
             db.session.add(note1)
             db.session.add(note2)
             db.session.commit()
