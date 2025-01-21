@@ -2,8 +2,14 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import {faPen} from '@fortawesome/free-solid-svg-icons';
+import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+
+interface Note {
+  id: number;
+  title: string;
+  content: string;
+}
 
 @Component({
   selector: 'app-notes-list',
@@ -17,17 +23,21 @@ export class NotesListComponent implements OnInit {
   faTrash = faTrash;
   faPen = faPen;
 
-  notes: any[] = [];
+  notes: Note[] = [];
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
-    this.http.get<any[]>('http://localhost:5000/notes').subscribe(data => {
+    this.http.get<Note[]>('http://localhost:5000/notes').subscribe(data => {
       this.notes = data;
     });
   }
 
-  deleteNote(){
-    console.log("ahoj");
+  deleteNote(id: number) {
+    if (confirm('Are you sure you want to delete this note?')) {
+      this.http.delete(`http://localhost:5000/delete-note/${id}`).subscribe(() => {
+        this.notes = this.notes.filter(note => note.id !== id);
+      });
+    }
   }
 }
