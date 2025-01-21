@@ -1,26 +1,26 @@
 <div class="cardflex">
   <div class="card">
     <div class="card text-center">
-      <div class="card-header">
-        Name of Note
+      <div class="card-header" style="background-color: black; color: white;">
+        <h2>Create a note</h2>
       </div>
-      <div class="card-body">
+      <div class="card-body" style="background-color: #2b3035;">
         <form (ngSubmit)="addNote()">
           <div class="form-floating">
             <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea"
-              [(ngModel)]="note.title" name="title" required></textarea>
-            <label for="floatingTextarea">Title of Note:</label>
+              [(ngModel)]="note.title" name="title" required ></textarea>
+            <label for="floatingTextarea" style="color: black;">Title of Note:</label>
           </div>
           <div class="form-floating">
             <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2"
               style="height: 100px" [(ngModel)]="note.content" name="content" required></textarea>
-            <label for="floatingTextarea2">Note content:</label>
+            <label for="floatingTextarea2" style="color: black;">Note content:</label>
           </div>
-          <button type="submit" class="btn btn-primary">Add note</button>
+          <button type="submit" class="btn btn-outline-light">Add note</button>
         </form>
       </div>
-      <div class="card-footer text-body-secondary">
-        This note will be added to the list of notes
+      <div class="card-footer text-body-secondary" style="background-color: black;">
+        <h6 style="color: white;">This note will be added to the list of notes</h6>
       </div>
     </div>
   </div>

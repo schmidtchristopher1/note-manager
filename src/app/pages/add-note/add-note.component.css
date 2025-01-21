@@ -1,8 +1,5 @@
 .card{
-    width: 500px;
-    
-
-
+    width: 600px;
 }
 
 .cardflex{
@@ -15,4 +12,13 @@
 
 .form-floating{
     margin: 20px;
+}
+
+.custom-textarea {
+    background-color: #2b3035 !important;
+    color: #ffffff !important;
+}
+
+.custom-label {
+    color: #ffffff !important;
 }
