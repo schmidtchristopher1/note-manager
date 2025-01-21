@@ -1,8 +1,9 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import {  HttpClientModule } from '@angular/common/http';
-import { LoginComponent } from '../app/pages/login/login.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+
 
 
 
@@ -13,8 +14,14 @@ import { LoginComponent } from '../app/pages/login/login.component';
     CommonModule, 
     ReactiveFormsModule,
     HttpClientModule,
+    FontAwesomeModule
+
    
    
-  ]
+  ],
+  exports: [
+    FontAwesomeModule
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class ModulesModule { }
