@@ -14,4 +14,29 @@ h1 {
 .card-header b {
   color: white;
   text-transform: uppercase;
+
 }
+
+.card-header{
+  background-color: black;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+}
+
+.card{
+  flex: 0 1 calc(33.333% - 10px);
+  margin: 5px;
+  box-sizing: border-box;
+}
+
+b{
+  margin: 5px;
+}
+
+button{
+  margin: 5px;
+}
+
+

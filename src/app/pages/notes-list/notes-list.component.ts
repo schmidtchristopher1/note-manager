@@ -1,15 +1,19 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
   selector: 'app-notes-list',
   standalone: true,
   imports: [CommonModule, HttpClientModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './notes-list.component.html',
   styleUrls: ['./notes-list.component.css'],
 })
 export class NotesListComponent implements OnInit {
+  faTrash = faTrash;
 
   notes: any[] = [];
 
@@ -21,6 +25,7 @@ export class NotesListComponent implements OnInit {
     });
   }
 
-
-
+  deleteNote(){
+    console.log("ahoj");
+  }
 }
