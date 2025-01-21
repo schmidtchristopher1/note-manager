@@ -6,9 +6,10 @@
       <b>{{note.title}}</b>
       <div>
         <button type="button" class="btn btn-outline-light"> <fa-icon [icon]="faPen"></fa-icon></button>
-      <button type="button" class="btn btn-outline-danger">
-        <fa-icon [icon]="faTrash"></fa-icon>
-      </button></div>
+        <button type="button" class="btn btn-outline-danger" (click)="deleteNote(note.id)">
+          <fa-icon [icon]="faTrash"></fa-icon>
+        </button>
+      </div>
     </div>
     <div class="card-body">
       <p class="card-text">{{note.content}}</p>
