@@ -1,7 +1,6 @@
 <div class="page">
   <div class="login">
     <h2>Please, Log in!</h2>
-
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <div class="form-floating mb-3">
         <input type="text" class="form-control" id="floatingInput" formControlName="username" placeholder="Username">
@@ -12,10 +11,7 @@
           placeholder="Password">
         <label for="floatingPassword">Password</label>
       </div>
-
-      <button type="submit" class="btn btn-primary">Log in!</button>
-
+      <button type="submit" class="btn btn-outline-light">Log In</button>
     </form>
   </div>
-
 </div>
