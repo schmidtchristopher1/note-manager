@@ -1,10 +1,11 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FormsModule } from '@angular/forms';
+import { NotesService } from '../../services/notes.service';
+import {HttpClientModule } from '@angular/common/http';
 
 interface Note {
   id: number;
@@ -16,7 +17,7 @@ interface Note {
 @Component({
   selector: 'app-notes-list',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, FontAwesomeModule, FormsModule],
+  imports: [CommonModule, FontAwesomeModule, FormsModule, HttpClientModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './notes-list.component.html',
   styleUrls: ['./notes-list.component.css'],
@@ -28,18 +29,18 @@ export class NotesListComponent implements OnInit {
   notes: Note[] = [];
   editingNote: Note | null = null;
 
-  constructor(private http: HttpClient) { }
+  constructor(private notesService:NotesService) { }
 
   ngOnInit(): void {
-    this.http.get<Note[]>('http://localhost:5000/notes').subscribe(data => {
-      this.notes = data;
+    this.notesService.getNotes().subscribe((notes) => {
+      this.notes = notes;
     });
   }
 
   deleteNote(id: number) {
     if (confirm('Are you sure you want to delete this note?')) {
-      this.http.delete(`http://localhost:5000/delete-note/${id}`).subscribe(() => {
-        this.notes = this.notes.filter(note => note.id !== id);
+      this.notesService.deleteNote(id).subscribe(() => {
+        this.notes = this.notes.filter((note) => note.id !== id);
       });
     }
   }
@@ -59,14 +60,14 @@ export class NotesListComponent implements OnInit {
         content: this.editingNote.content
       };
 
-      this.http.put(`http://localhost:5000/update-note/${id}`, updatedNote)
-        .subscribe(() => {
-          const index = this.notes.findIndex(n => n.id === id);
-          if (index !== -1 && this.editingNote) {
-            this.notes[index] = this.editingNote;
-          }
-          this.editingNote = null;
-        });
+      this.notesService.updateNote(id, updatedNote).subscribe(() => {
+        const note = this.notes.find((note) => note.id === id);
+        if (note) {
+          note.title = updatedNote.title;
+          note.content = updatedNote.content;
+        }
+        this.editingNote = null;
+      });
     }
   }
 }

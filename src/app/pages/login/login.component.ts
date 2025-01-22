@@ -1,56 +1,47 @@
-import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthService } from '../../services/auth.service';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-
+import { AuthService } from '../../services/auth.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, HttpClientModule],
+  imports: [HttpClientModule, ReactiveFormsModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
   loginForm: FormGroup;
-  router = inject(Router);
 
-  constructor(private http: HttpClient, private authService: AuthService) {
-    this.loginForm = new FormGroup({
-      username: new FormControl('', Validators.required),
-      password: new FormControl('', Validators.required)
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {
+    this.loginForm = this.fb.group({
+      username: ['', Validators.required],
+      password: ['', Validators.required]
     });
   }
-
 
   onSubmit() {
     if (this.loginForm.valid) {
       const { username, password } = this.loginForm.value;
-      const logindata = { username, password };
-      console.log(logindata);
-      this.http.post<{ access_token: string }>('http://localhost:5000/login', { username, password })
-        .subscribe({
-          next: (response) => {
-            console.log(response)
-            this.authService.setToken(response.access_token);
-            console.log('Login successful');
-            console.log('Token:', response.access_token);
-            this.router.navigate(['/notes']);
-          },
-          error: (error) => {
-            console.error('Login failed', error);
-          }
-        });
+      this.authService.login(username, password).subscribe({
+        next: (response) => {
+          console.log(response);
+          this.authService.setToken(response.access_token);
+          console.log('Login successful');
+          console.log('Token:', response.access_token);
+          this.router.navigate(['/notes']);
+        },
+        error: (error) => {
+          console.error('Login failed', error);
+        }
+      });
     } else {
       console.log('Form is invalid');
     }
   }
 }
-
-
-
-
-
-

@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
-import { HttpClientModule, HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { NotesService } from '../../services/notes.service';
+import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-add-note',
   standalone: true,
-  imports: [HttpClientModule, FormsModule],
+  imports: [FormsModule, CommonModule, HttpClientModule],
   templateUrl: './add-note.component.html',
   styleUrls: ['./add-note.component.css'],
 })
@@ -15,14 +17,10 @@ export class AddNoteComponent {
     content: ''
   };
 
-  constructor(private http: HttpClient) { }
+  constructor(private notesService: NotesService) { }
 
   addNote(): void {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
-
-    this.http.post('http://localhost:5000/add-note', this.note, { headers }).subscribe(response => {
+    this.notesService.addNote(this.note).subscribe(response => {
       console.log('Note added', response);
       this.note = { title: '', content: '' };
     });
