@@ -3,18 +3,34 @@
 <div class="zoznam">
   <div *ngFor="let note of notes" class="card text-bg-dark mb-3" id="card">
     <div class="card-header">
-      <b>{{note.title}}</b>
-      <div>
-        <button type="button" class="btn btn-outline-light"> <fa-icon [icon]="faPen"></fa-icon></button>
-        <button type="button" class="btn btn-outline-danger" (click)="deleteNote(note.id)">
-          <fa-icon [icon]="faTrash"></fa-icon>
+      <div *ngIf="editingNote?.id !== note.id" class="flexDiv">
+        <b>{{note.title}}</b>
+        <div class="button">
+          <button type="button" class="btn btn-outline-light" (click)="startEdit(note)" style="display: flex;">
+            <fa-icon [icon]="faPen"></fa-icon>
+          </button>
+          <button type="button" class="btn btn-outline-danger" (click)="deleteNote(note.id)" style="display: flex;">
+            <fa-icon [icon]="faTrash"></fa-icon>
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="editingNote?.id === note.id">
+        <input [(ngModel)]="editingNote!.title" class="form-control mb-2" required>
+        <textarea [(ngModel)]="editingNote!.content" class="form-control mb-2" required></textarea>
+        <button class="btn btn-primary me-2" (click)="updateNote(note.id)"
+          [disabled]="!editingNote?.title || !editingNote?.content">
+          Save
         </button>
+        <button class="btn btn-secondary" (click)="cancelEdit()">Cancel</button>
       </div>
     </div>
-    <div class="card-body" >
+
+    <div *ngIf="editingNote?.id !== note.id" class="card-body">
       <p class="card-text">{{note.content}}</p>
-      <p class="card-text" style="opacity: 1; color:rgba(173, 173, 173, 0.651)">Note created at: <b>{{note.created_at}}</b></p>
+      <p class="card-text" style="opacity: 1; color:rgba(173, 173, 173, 0.651)">
+        Note created at: <b>{{note.created_at}}</b>
+      </p>
     </div>
   </div>
-
 </div>
