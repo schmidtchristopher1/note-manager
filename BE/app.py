@@ -51,7 +51,7 @@ def login():
 
     # Generate JWT token
     access_token = create_access_token(identity=user.id)
-    return jsonify({"access_token": access_token}), 200
+    return jsonify({"access_token": access_token, "message": "Login successful"}), 200
 
 
 @app.route("/notes", methods=["GET"])
