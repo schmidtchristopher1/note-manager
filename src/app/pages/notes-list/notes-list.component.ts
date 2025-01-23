@@ -6,6 +6,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FormsModule } from '@angular/forms';
 import { NotesService } from '../../services/notes.service';
 import {HttpClientModule } from '@angular/common/http';
+import { MessageService } from '../../services/message.service';
 
 interface Note {
   id: number;
@@ -29,7 +30,7 @@ export class NotesListComponent implements OnInit {
   notes: Note[] = [];
   editingNote: Note | null = null;
 
-  constructor(private notesService:NotesService) { }
+  constructor(private notesService:NotesService, private messageService:MessageService) { }
 
   ngOnInit(): void {
     this.notesService.getNotes().subscribe((notes) => {
@@ -39,9 +40,16 @@ export class NotesListComponent implements OnInit {
 
   deleteNote(id: number) {
     if (confirm('Are you sure you want to delete this note?')) {
-      this.notesService.deleteNote(id).subscribe(() => {
+      this.notesService.deleteNote(id).subscribe(response => {
         this.notes = this.notes.filter((note) => note.id !== id);
-      });
+        this.messageService.showSuccessMessage(response.message);
+
+      },
+      error => {
+        this.messageService.showErrorMessage(error.error.message);
+      }
+    );
+      
     }
   }
 
@@ -52,7 +60,6 @@ export class NotesListComponent implements OnInit {
   cancelEdit() {
     this.editingNote = null;
   }
-
   updateNote(id: number) {
     if (this.editingNote?.title && this.editingNote?.content) {
       const updatedNote = {
@@ -60,14 +67,20 @@ export class NotesListComponent implements OnInit {
         content: this.editingNote.content
       };
 
-      this.notesService.updateNote(id, updatedNote).subscribe(() => {
-        const note = this.notes.find((note) => note.id === id);
-        if (note) {
-          note.title = updatedNote.title;
-          note.content = updatedNote.content;
+      this.notesService.updateNote(id, updatedNote).subscribe(
+        (response) => {
+          const note = this.notes.find((note) => note.id === id);
+          if (note) {
+            note.title = updatedNote.title;
+            note.content = updatedNote.content;
+          }
+          this.editingNote = null;
+          this.messageService.showSuccessMessage(response.message);
+        },
+        error => {
+          this.messageService.showErrorMessage(error.error.message);
         }
-        this.editingNote = null;
-      });
+      );
     }
   }
 }

@@ -1,0 +1,10 @@
+<div class="alert-container">
+  <div
+    *ngFor="let message of messages"
+    class="alert"
+    [ngClass]="'alert-' + message.type"
+    role="alert"
+  >
+    {{ message.text }}
+  </div>
+</div>
