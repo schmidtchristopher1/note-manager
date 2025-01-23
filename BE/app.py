@@ -39,7 +39,7 @@ class Note(db.Model):
 def login():
     data = request.get_json()
     if not data or not data.get("username") or not data.get("password"):
-        return jsonify({"message": "Missing username or password"}), 400
+        return jsonify({"error": "Missing username or password"}), 400
 
     username = data["username"]
     password = data["password"]
@@ -47,7 +47,7 @@ def login():
     # Fetch user from the database
     user = User.query.filter_by(username=username).first()
     if not user or not check_password_hash(user.password, password):
-        return jsonify({"message": "Invalid username or password"}), 401
+        return jsonify({"error": "Invalid username or password"}), 401
 
     # Generate JWT token
     access_token = create_access_token(identity=user.id)
@@ -67,7 +67,7 @@ def get_notes():
         for note in notes
     ]
     if not notes:
-        return jsonify({"message": "No notes found"}), 404
+        return jsonify({"error": "No notes found"}), 404
     else:
         return jsonify(notes), 200
 
@@ -78,13 +78,13 @@ def add_note():
 
     data = request.get_json(silent=True)
     if not data or not isinstance(data, dict):
-        return jsonify({"message": "Invalid JSON payload"}), 400
+        return jsonify({"error": "Invalid JSON payload"}), 400
 
     title = data.get("title")
     content = data.get("content")
 
     if not title or not content:
-        return jsonify({"message": "Missing title or content"}), 400
+        return jsonify({"error": "Missing title or content"}), 400
 
     # Pass the `datetime` object directly
     note = Note(title=title, content=content, created_at=time_of_creation)
@@ -93,7 +93,7 @@ def add_note():
         db.session.commit()
     except Exception as e:
         db.session.rollback()
-        return jsonify({"message": "Database error", "error": str(e)}), 500
+        return jsonify({"error": "Database error", "error": str(e)}), 500
 
     return jsonify({"message": "Note added successfully"}), 201
 
@@ -102,14 +102,14 @@ def add_note():
 def update_note(id):
     data = request.get_json()
     if not data or not data.get("title") or not data.get("content"):
-        return jsonify({"message": "Missing title or content"}), 400
+        return jsonify({"error": "Missing title or content"}), 400
 
     title = data["title"]
     content = data["content"]
 
     note = Note.query.get(id)
     if not note:
-        return jsonify({"message": "Note not found"}), 404
+        return jsonify({"error": "Note not found"}), 404
 
     note.title = title
     note.content = content
@@ -122,7 +122,7 @@ def update_note(id):
 def delete_note(id):
     note = Note.query.get(id)
     if not note:
-        return jsonify({"message": "This Note doesn't exist."}), 404
+        return jsonify({"error": "This Note doesn't exist."}), 404
 
     db.session.delete(note)
     db.session.commit()
