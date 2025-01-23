@@ -27,12 +27,13 @@ export class LoginComponent {
     private messageService: MessageService
   ) {
     this.loginForm = this.fb.group({
-      username: ['', Validators.required],
-      password: ['', Validators.required],
+      username: [''],
+      password: [''],
     });
   }
 
   onSubmit() {
+    console.log(this.loginForm.value);
       const { username, password } = this.loginForm.value;
       this.authService.login(username, password).subscribe(
         (response) => {
@@ -41,7 +42,7 @@ export class LoginComponent {
           this.messageService.showSuccessMessage(response.message);
         },
         (error) => {
-          const errorMessages = error.error.message;
+          const errorMessages = error.error.error;
           this.messageService.showErrorMessage(errorMessages);
           this.router.navigate(['/login']);
         }
