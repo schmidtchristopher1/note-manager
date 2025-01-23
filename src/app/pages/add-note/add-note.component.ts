@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { NotesService } from '../../services/notes.service';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
+import { MessageService } from '../../services/message.service';
 
 @Component({
   selector: 'app-add-note',
@@ -17,11 +18,11 @@ export class AddNoteComponent {
     content: ''
   };
 
-  constructor(private notesService: NotesService) { }
+  constructor(private notesService: NotesService, private messageService: MessageService) { }
 
   addNote(): void {
     this.notesService.addNote(this.note).subscribe(response => {
-      console.log('Note added', response);
+      this.messageService.showSuccessMessage(response.message);
       this.note = { title: '', content: '' };
     });
   }
