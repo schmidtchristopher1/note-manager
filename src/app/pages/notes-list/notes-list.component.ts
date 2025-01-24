@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
@@ -19,7 +19,6 @@ interface Note {
   selector: 'app-notes-list',
   standalone: true,
   imports: [CommonModule, FontAwesomeModule, FormsModule, HttpClientModule],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './notes-list.component.html',
   styleUrls: ['./notes-list.component.css'],
 })
@@ -78,7 +77,7 @@ export class NotesListComponent implements OnInit {
           this.messageService.showSuccessMessage(response.message);
         },
         error => {
-          this.messageService.showErrorMessage(error.error.message);
+          this.messageService.showErrorMessage(error.error.error);
         }
       );
     }

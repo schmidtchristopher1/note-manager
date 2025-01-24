@@ -18,12 +18,18 @@ export class AddNoteComponent {
     content: ''
   };
 
+
   constructor(private notesService: NotesService, private messageService: MessageService) { }
 
   addNote(): void {
-    this.notesService.addNote(this.note).subscribe(response => {
-      this.messageService.showSuccessMessage(response.message);
-      this.note = { title: '', content: '' };
-    });
+    this.notesService.addNote(this.note).subscribe(
+      response => {
+        this.messageService.showSuccessMessage(response.message);
+        this.note = { title: '', content: '' };
+      },
+      error => {
+        this.messageService.showErrorMessage(error.error.error);
+      }
+    );
   }
 }
