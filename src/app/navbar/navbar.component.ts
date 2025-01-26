@@ -1,15 +1,15 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
-import { AuthService } from '../services/auth.service';
-import { MessageService } from '../services/message.service';
-import { CommonModule } from '@angular/common';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import {Component, OnInit} from '@angular/core';
+import {Router, RouterLink, RouterLinkActive} from '@angular/router';
+import {faRightFromBracket} from '@fortawesome/free-solid-svg-icons';
+import {AuthService} from '../services/auth.service';
+import {MessageService} from '../services/message.service';
+import {CommonModule} from '@angular/common';
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 
 
 @Component({
   selector: 'app-navbar',
-  imports: [CommonModule, FontAwesomeModule],
+  imports: [CommonModule, FontAwesomeModule, RouterLink, RouterLinkActive],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
@@ -21,8 +21,8 @@ export class NavbarComponent implements OnInit {
     private router: Router,
     private as: AuthService,
     private messageService: MessageService,
-  
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
     const token = this.as.getToken();
