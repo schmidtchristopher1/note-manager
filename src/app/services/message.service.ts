@@ -1,12 +1,15 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MessageService {
-  private messagesSubject = new Subject<{ type: string, text: string }>();
+  private messagesSubject = new Subject<{ type: string; text: string }>();
   messages$ = this.messagesSubject.asObservable();
+  
+  private loggedIn = new BehaviorSubject<boolean>(false);
+  loggedIn$ = this.loggedIn.asObservable();
 
   showMessage(type: string, text: string): void {
     this.messagesSubject.next({ type, text });
@@ -24,4 +27,7 @@ export class MessageService {
     this.showMessage('warning', text);
   }
 
+  setLoggedIn(status: boolean): void {
+    this.loggedIn.next(status);
+  }
 }

@@ -32,7 +32,10 @@ export class NotesService {
     return this.http.delete(`${this.apiUrl}/delete-note/${id}`);
   }
 
-  updateNote(id: number, note: { title: string; content: string }): Observable<any> {
+  updateNote(
+    id: number,
+    note: { title: string; content: string }
+  ): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });

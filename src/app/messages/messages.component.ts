@@ -17,7 +17,7 @@ export class MessagesComponent implements OnInit {
     this.messageService.messages$.subscribe(message => {
       if (message) {
         this.messages.push(message);
-        setTimeout(() => {this.removeMessage(message);}, 5000);
+        setTimeout(() => {this.removeMessage(message);}, 2500);
       } else {
         this.messages = [];
       }

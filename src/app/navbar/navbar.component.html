@@ -15,6 +15,6 @@
         </li>
       </ul>
     </div>
-    <fa-icon [icon]="faRightFromBracket" style="color: white;" (click)="logout()"></fa-icon>
+    <fa-icon *ngIf="isLoggedIn" [icon]="faRightFromBracket" style="color: white;" (click)="logout()"></fa-icon>
   </div>
 </nav>

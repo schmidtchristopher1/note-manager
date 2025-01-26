@@ -1,28 +1,39 @@
-import { Component, inject } from '@angular/core';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
-import { AuthService } from '../services/auth.service';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { AuthService } from '../services/auth.service';
 import { MessageService } from '../services/message.service';
+import { CommonModule } from '@angular/common';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 
 @Component({
   selector: 'app-navbar',
-  standalone: true,
-  imports: [RouterLink, RouterLinkActive, FontAwesomeModule],
+  imports: [CommonModule, FontAwesomeModule],
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.css'],
+  styleUrls: ['./navbar.component.css']
 })
-export class NavbarComponent {
-
+export class NavbarComponent implements OnInit {
   faRightFromBracket = faRightFromBracket;
+  isLoggedIn = false;
 
-  router = inject(Router);
-  as = inject(AuthService);
+  constructor(
+    private router: Router,
+    private as: AuthService,
+    private messageService: MessageService,
+  
+  ) {}
 
-  constructor(private messageService: MessageService) { 
+  ngOnInit(): void {
     const token = this.as.getToken();
-    if (token == null) {
+    this.isLoggedIn = token !== null;
+    this.messageService.setLoggedIn(this.isLoggedIn);
+
+    this.messageService.loggedIn$.subscribe(status => {
+      this.isLoggedIn = status;
+    });
+
+    if (!this.isLoggedIn) {
       this.router.navigate(['/login']);
     } else {
       this.router.navigate(['/notes']);
@@ -30,9 +41,10 @@ export class NavbarComponent {
   }
 
   logout(): void {
-    this.as.logout();
-    this.router.navigate(['/login']);
-    this.messageService.showWarningMessage('You have been logged out');
-    
+    if (window.confirm('Are you sure you want to log out?')) {
+      this.as.logout();
+      this.router.navigate(['/login']);
+      this.messageService.showWarningMessage('You have been logged out');
+    }
   }
 }
