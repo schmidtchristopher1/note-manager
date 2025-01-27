@@ -7,8 +7,12 @@ To start the Angular development server, follow these steps:
    ```bash
    cd note-manager
    ```
+2. **Install the Dependencies**
 
-2. **Start the Development Server**
+   ```bash
+   npm install
+   ```
+3. **Start the Development Server**
 
    ```bash
    ng serve
