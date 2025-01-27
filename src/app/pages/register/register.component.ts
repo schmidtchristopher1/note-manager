@@ -27,7 +27,7 @@ export class RegisterComponent {
       password: ['', [Validators.required, Validators.minLength(6)]],
       repeatPassword: ['', [Validators.required]]
     }, {
-      validators: this.passwordMatchValidator.bind(this)
+      validators: this.passwordMatchValidator
     });
   }
 
