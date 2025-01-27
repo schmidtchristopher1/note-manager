@@ -10,11 +10,7 @@ import { MessageService } from './message.service';
 export class AuthService {
   private apiUrl = 'http://localhost:5000';
 
-  
-
-  constructor(private http:HttpClient, private messageService:MessageService) { }
-
-
+  constructor(private http: HttpClient, private messageService: MessageService) { }
 
   setToken(token: string) {
     localStorage.setItem('access_token', token);
@@ -33,10 +29,13 @@ export class AuthService {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });
-    return this.http.post<{ access_token: string, message:string }>(`${this.apiUrl}/login`, { username, password }, { headers });
-  
+    return this.http.post<{ access_token: string, message: string }>(`${this.apiUrl}/login`, { username, password }, { headers });
   }
-  
 
-
+  register(username: string, password: string): Observable<{ message: string }> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+    return this.http.post<{ message: string }>(`${this.apiUrl}/register`, { username, password }, { headers });
+  }
 }
