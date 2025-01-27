@@ -1,33 +1,36 @@
 <div class="page">
-    <div class="register">
-        <h2>Register</h2>
-        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-            <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="floatingInput" formControlName="username"
-                    placeholder="Username">
-                <label for="floatingInput">Username</label>
-            </div>
-            <div class="form-floating mb-3">
-                <input type="password" class="form-control" id="floatingPassword" formControlName="password"
-                    placeholder="Password">
-                <label for="floatingPassword">Password</label>
-            </div>
-            <div class="form-floating mb-3">
-                <input type="password" class="form-control" id="floatingRepeatPassword" formControlName="repeatPassword"
-                    placeholder="Repeat Password">
-                <label for="floatingRepeatPassword">Repeat Password</label>
-            </div>
-            <div *ngIf="registerForm.hasError('passwordMismatch')" class="text-danger mb-3">
-                Passwords do not match
-            </div>
-            <button type="submit" class="btn btn-outline-light" [disabled]="registerForm.invalid">
-                Register
-            </button>
-        </form>
-        <div>
-            <p style="color: white;">Already have an account? <a [routerLink]="['/login']">
-                    <b style="font-weight:bold; cursor: pointer;">Login here!</b></a>
-            </p>
-        </div>
+  <div class="register">
+    <h2>Register</h2>
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="floatingInput" formControlName="username"
+               placeholder="Username">
+        <label for="floatingInput">Username</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input type="password" class="form-control" id="floatingPassword" formControlName="password"
+               placeholder="Password">
+        <label for="floatingPassword">Password</label>
+      </div>
+      <div *ngIf="registerForm.get('password')?.hasError('minlength')" class="text-danger">
+        Password must be at least 6 characters long
+      </div>
+      <div class="form-floating mb-3">
+        <input type="password" class="form-control" id="floatingRepeatPassword" formControlName="repeatPassword"
+               placeholder="Repeat Password">
+        <label for="floatingRepeatPassword">Repeat Password</label>
+      </div>
+      <div *ngIf="registerForm.hasError('passwordMismatch')" class="text-danger mb-3">
+        Passwords do not match
+      </div>
+      <button type="submit" class="btn btn-outline-light" [disabled]="registerForm.invalid">
+        Register
+      </button>
+    </form>
+    <div>
+      <p style="color: white;">Already have an account? <a [routerLink]="['/login']">
+        <b style="font-weight:bold; cursor: pointer;">Login here!</b></a>
+      </p>
     </div>
+  </div>
 </div>
