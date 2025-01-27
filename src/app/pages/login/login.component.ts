@@ -5,7 +5,7 @@ import {
   Validators,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { HttpClientModule } from '@angular/common/http';
 import { MessageService } from '../../services/message.service';
@@ -13,7 +13,7 @@ import { MessageService } from '../../services/message.service';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [HttpClientModule, ReactiveFormsModule],
+  imports: [HttpClientModule, ReactiveFormsModule, RouterModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
@@ -33,19 +33,19 @@ export class LoginComponent {
   }
 
   onSubmit() {
-      const { username, password } = this.loginForm.value;
-      this.authService.login(username, password).subscribe(
-        (response) => {
-          this.authService.setToken(response.access_token);
-          this.router.navigate(['/notes']);
-          this.messageService.showSuccessMessage(response.message);
-        },
-        (error) => {
-          const errorMessages = error.error.error;
-          this.messageService.showErrorMessage(errorMessages);
-          this.router.navigate(['/login']);
-        }
-      );
-    } 
+    const { username, password } = this.loginForm.value;
+    this.authService.login(username, password).subscribe(
+      (response) => {
+        this.authService.setToken(response.access_token);
+        this.router.navigate(['/notes']);
+        this.messageService.showSuccessMessage(response.message);
+      },
+      (error) => {
+        const errorMessages = error.error.error;
+        this.messageService.showErrorMessage(errorMessages);
+        this.router.navigate(['/login']);
+      }
+    );
+  }
 }
 
